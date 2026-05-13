@@ -24,6 +24,7 @@ function getRecipesFromStorage() {
 	// A9. TODO - Complete the functionality as described in this function
 	//           header. It is possible in only a single line, but should
 	//           be no more than a few lines.
+	return JSON.parse(localStorage.getItem('recipes')) || [];
 }
 
 /**
@@ -39,6 +40,17 @@ function addRecipesToDocument(recipes) {
 	//            create a <recipe-card> element for each one, and populate
 	//            each <recipe-card> with that recipe data using element.data = ...
 	//            Append each element to <main>
+
+	const main = document.querySelector('main');
+
+	// A11
+	recipes.forEach(recipe => {
+		const recipeCard = document.createElement('recipe-card');
+
+		recipeCard.data = recipe;
+
+		main.appendChild(recipeCard);
+	});
 }
 
 /**
@@ -51,6 +63,8 @@ function saveRecipesToStorage(recipes) {
 	// B1. TODO - Complete the functionality as described in this function
 	//            header. It is possible in only a single line, but should
 	//            be no more than a few lines.
+
+	localStorage.setItem('recopes',JSON.stringify(recipes));
 }
 
 /**
@@ -76,4 +90,51 @@ function initFormHandler() {
 	// Steps B12 & B13 will occur inside the event listener from step B11
 	// B12. TODO - Clear the local storage
 	// B13. TODO - Delete the contents of <main>
+	
+	const form = document.querySelector('form');
+		form.addEventListener('submit', (event) => {
+
+		event.preventDefault();
+
+		// B4
+		const formData = new FormData(form);
+
+		// B5
+		const recipeObject = {};
+
+		formData.forEach((value, key) => {
+			recipeObject[key] = value;
+		});
+
+		// B6
+		const recipeCard = document.createElement('recipe-card');
+
+		// B7
+		recipeCard.data = recipeObject;
+
+		// B8
+		document.querySelector('main').appendChild(recipeCard);
+
+		// B9
+		const recipes = getRecipesFromStorage();
+
+		recipes.push(recipeObject);
+
+		saveRecipesToStorage(recipes);
+
+		form.reset();
+	});
+		// B10
+	const clearButton = document.querySelector('button');
+
+	// B11
+	clearButton.addEventListener('click', () => {
+
+		// B12
+		localStorage.clear();
+
+		// B13
+		document.querySelector('main').innerHTML = '';
+	});
+
 }
